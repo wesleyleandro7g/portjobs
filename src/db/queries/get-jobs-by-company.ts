@@ -10,7 +10,7 @@ interface useJobsByCompanyProps {
 }
 
 export function useJobsByCompany({ userId }: useJobsByCompanyProps) {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['jobs', userId],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -51,5 +51,5 @@ export function useJobsByCompany({ userId }: useJobsByCompanyProps) {
     }
   })
 
-  return { data: dataFormated, isLoading, isError }
+  return { data: dataFormated, isLoading, isError, refetch }
 }

@@ -4,9 +4,9 @@
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CircleCheckBig, Plus, Trash } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,11 +25,20 @@ import { useToast } from '@/hooks/use-toast'
 import { formSchema } from './form-schema'
 import { Spinner } from '@/components/system/spinner'
 import { useUser } from '@/contexts/user-context'
+import { useQueryClient } from '@tanstack/react-query'
+import { JobType } from '@/types/jobs'
 
-export default function Panel() {
+export default function Editar() {
   const router = useRouter()
   const { user } = useUser()
+  const { job_id } = useParams()
   const [loading, setLoading] = useState(false)
+  const queryClient = useQueryClient()
+
+  const [responsibilities, setResposabilities] = useState<string[]>([])
+  const [requirements, setRequirements] = useState<string[]>([])
+  const [differentials, setDifferentials] = useState<string[]>([])
+  const [benefits, setBenefits] = useState<string[]>([])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,10 +59,56 @@ export default function Panel() {
 
   const { toast } = useToast()
 
-  const [responsibilities, setResposabilities] = useState<string[]>([])
-  const [requirements, setRequirements] = useState<string[]>([])
-  const [differentials, setDifferentials] = useState<string[]>([])
-  const [benefits, setBenefits] = useState<string[]>([])
+  useEffect(() => {
+    const cachedJobs: JobType[] | undefined = queryClient.getQueryData([
+      'jobs',
+      user?.id,
+    ])
+
+    if (!cachedJobs) {
+      router.push('/painel')
+    }
+
+    if (cachedJobs) {
+      const jobToEdit = cachedJobs?.find(
+        (job: JobType) => job.id === Number(job_id)
+      )
+
+      const responsibilities = Object.keys(
+        jobToEdit?.responsibilities || {}
+      ).map((key) => jobToEdit?.responsibilities[key] || '')
+
+      const requirements = Object.keys(jobToEdit?.requirements || {}).map(
+        (key) => jobToEdit?.requirements[key] || ''
+      )
+
+      const differentials = Object.keys(jobToEdit?.differentials || {}).map(
+        (key) => jobToEdit?.differentials[key] || ''
+      )
+
+      const benefits = Object.keys(jobToEdit?.benefits || {}).map(
+        (key) => jobToEdit?.benefits[key] || ''
+      )
+
+      form.reset({
+        title: jobToEdit?.title,
+        description: jobToEdit?.description,
+        salary: jobToEdit?.salary,
+        location: jobToEdit?.location,
+        contract: jobToEdit?.contract,
+        type: jobToEdit?.type,
+        responsibilities,
+        requirements,
+        differentials,
+        benefits,
+      })
+
+      setResposabilities(responsibilities)
+      setRequirements(requirements)
+      setDifferentials(differentials)
+      setBenefits(benefits)
+    }
+  }, [user?.id, job_id])
 
   const addResponsability = () => {
     setResposabilities([...responsibilities, ''])
@@ -136,33 +191,35 @@ export default function Panel() {
       Object.entries(benefits).map(([key, value]) => [key, value])
     )
 
-    const { error } = await supabase.from('jobs').insert({
-      title: rest.title,
-      description: rest.description,
-      salary: rest.salary,
-      location: rest.location,
-      contract: rest.contract,
-      type: rest.type,
-      responsibilities: responsabilitiesJSON,
-      requirements: requirementsJSON,
-      differentials: differentialsJSON,
-      benefits: benefitsJSON,
-      status: 'aberta',
-      user: user?.id,
-    })
+    const { error } = await supabase
+      .from('jobs')
+      .update({
+        id: Number(job_id),
+        title: rest.title,
+        description: rest.description,
+        salary: rest.salary,
+        location: rest.location,
+        contract: rest.contract,
+        type: rest.type,
+        responsibilities: responsabilitiesJSON,
+        requirements: requirementsJSON,
+        differentials: differentialsJSON,
+        benefits: benefitsJSON,
+      })
+      .eq('id', Number(job_id))
 
     setLoading(false)
 
     if (error) {
       return toast({
-        title: 'Oops! Erro ao criar vaga',
+        title: 'Oops! Erro ao atualizar vaga',
         description: error.message,
       })
     }
 
     toast({
-      title: 'Vaga cadastrada com sucesso',
-      description: 'Sua vaga foi cadastrada com sucesso!',
+      title: 'Vaga atualizada com sucesso',
+      description: 'Sua vaga foi atualizada com sucesso!',
     })
 
     router.push('/painel')

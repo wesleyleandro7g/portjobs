@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -36,8 +37,9 @@ import {
 
 import { useUser } from '@/contexts/user-context'
 import { useJobsByCompany } from '@/db/queries/get-jobs-by-company'
-import Image from 'next/image'
 import { Spin } from '@/components/system/spin'
+import { supabase } from '@/db/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 interface DetailsProps {
   Icon: any
@@ -59,10 +61,40 @@ function Details({ Icon, title, value }: DetailsProps) {
 
 export default function Panel() {
   const { user } = useUser()
+  const { toast } = useToast()
+
   const [openCollapsible, setOpenCollapsible] = useState<number | null>(null)
   const [professionalId, setProfessionalId] = useState<string>('')
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState<boolean>(false)
 
-  const { data, isLoading } = useJobsByCompany({ userId: user?.id })
+  const { data, isLoading, refetch } = useJobsByCompany({ userId: user?.id })
+
+  async function changeJobStatus(jobId: number, status: string) {
+    setIsLoadingUpdate(true)
+
+    const { error } = await supabase
+      .from('jobs')
+      .update({
+        status,
+      })
+      .eq('id', jobId)
+
+    setIsLoadingUpdate(false)
+
+    if (error) {
+      return toast({
+        title: 'Oops! Erro ao atualizar status da vaga',
+        description: error.message,
+      })
+    }
+
+    toast({
+      title: 'Status da vaga atualizado com sucesso',
+      description: 'Sua vaga foi atualizada com sucesso!',
+    })
+
+    refetch()
+  }
 
   return (
     <Dialog>
@@ -140,9 +172,11 @@ export default function Panel() {
                       {isOpened ? 'Ver menos' : 'Detalhes'}
                     </div>
                   </CollapsibleTrigger>
-                  <Button className='text-white'>
-                    <Edit2 /> Editar
-                  </Button>
+                  <Link href={`/painel/${job.id}`}>
+                    <Button className='text-white'>
+                      <Edit2 /> Editar
+                    </Button>
+                  </Link>
                 </div>
               </div>
               <CollapsibleContent>
@@ -272,7 +306,16 @@ export default function Panel() {
                       )}
                     </div>
                     <div className='flex flex-col w-full gap-2'>
-                      <Button className='text-white'>
+                      <Button
+                        className='text-white'
+                        disabled={isLoadingUpdate}
+                        onClick={() =>
+                          changeJobStatus(
+                            job.id,
+                            job.status === 'aberta' ? 'encerrada' : 'aberta'
+                          )
+                        }
+                      >
                         {job.status === 'aberta'
                           ? 'Encerrar vaga'
                           : 'Reabrir vaga'}
