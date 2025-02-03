@@ -77,20 +77,11 @@ export function Header() {
         </div>
 
         <div className='flex space-x-2 items-center'>
-          <Bell className='text-primary' />
+          <Bell className='text-primary hidden md:block' />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              {/* {isLoading ? (
-                <Skeleton className='w-[200px] h-8 rounded-full bg-primary/20' />
-              ) : (
-                <button className='flex justify-center items-center gap-1 h-8 px-4 lowercase text-sm text-primary bg-primary/20 rounded-full'>
-                  {user && user?.email}
-                  <ChevronDown className='size-4' />
-                </button>
-              )} */}
-
               <button className='flex justify-center items-center gap-1 h-8 px-4 lowercase text-sm text-primary bg-primary/20 rounded-full'>
-                {user?.email || 'PortJOBS'}
+                {user?.name || 'PortJOBS'}
                 <ChevronDown className='size-4' />
               </button>
             </DropdownMenuTrigger>

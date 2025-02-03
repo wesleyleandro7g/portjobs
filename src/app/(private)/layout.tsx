@@ -1,4 +1,5 @@
 import { Aside } from '@/components/system/aside'
+import { BottomNav } from '@/components/system/bottom-nav'
 import { Header } from '@/components/system/header'
 
 export default function RootLayout({
@@ -7,7 +8,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className='flex w-full min-h-screen overflow-hidden bg-white'>
+    <div className='flex w-full min-h-screen overflow-hidden bg-white relative'>
       <Aside />
       <div className='w-full h-svh bg-background overflow-hidden'>
         <Header />
@@ -15,6 +16,7 @@ export default function RootLayout({
           {children}
         </main>
       </div>
+      <BottomNav />
     </div>
   )
 }

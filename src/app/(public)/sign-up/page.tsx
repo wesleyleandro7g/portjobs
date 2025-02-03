@@ -96,8 +96,8 @@ export default function SignIn() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-          <Card className='w-full max-w-[380px] bg-white border-none'>
+        <div className='flex flex-col items-center justify-center min-h-screen py-2 bg-white md:bg-background'>
+          <Card className='w-full p-0 md:p6 md:max-w-[380px] bg-white shadow-none md:shadow-md border-none'>
             <CardHeader>
               <CardTitle className='text-3xl'>Criar conta</CardTitle>
               <CardDescription>Crie sua conta gratuitamente</CardDescription>

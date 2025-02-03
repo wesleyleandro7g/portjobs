@@ -175,7 +175,7 @@ export default function Panel() {
           <div className='flex justify-between items-center w-full'>
             <h1 className='text-2xl font-semibold'>Adicionar nova vaga</h1>
           </div>
-          <div className='grid grid-cols-3 w-full items-center gap-4 bg-white p-4 rounded-md'>
+          <div className='grid grid-cols-1 md:grid-cols-3 w-full items-center gap-4 bg-white p-4 rounded-md'>
             <FormField
               control={form.control}
               name='title'

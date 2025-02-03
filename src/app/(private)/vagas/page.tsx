@@ -123,7 +123,7 @@ export default function Vagas() {
           >
             <div
               data-isOpened={isOpened}
-              className='grid grid-cols-3 bg-white rounded-b-lg data-[isOpened=true]:rounded-b-none rounded-t-lg p-5 w-full'
+              className='flex flex-col md:grid grid-cols-3 bg-white rounded-b-lg data-[isOpened=true]:rounded-b-none rounded-t-lg p-5 w-full gap-3'
             >
               <div className='flex flex-col col-span-2 text-left w-full gap-1'>
                 <h2 className='text-xl font-semibold'>{job.title}</h2>
@@ -148,7 +148,7 @@ export default function Vagas() {
               </div>
             </div>
             <CollapsibleContent>
-              <div className='grid grid-cols-3 bg-white rounded-b-lg rounded-t-none p-5 pt-0'>
+              <div className='flex flex-col md:grid grid-cols-3 bg-white rounded-b-lg rounded-t-none p-5 pt-0'>
                 <div className='col-span-2 space-y-4'>
                   {job.responsibilities.length > 0 && (
                     <div>

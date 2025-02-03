@@ -82,32 +82,13 @@ export default function SignIn() {
     } else {
       router.push('/vagas')
     }
-
-    // if (email === 'empresa@portjobs.com' && password === '123456') {
-    //   setEmail(email)
-    //   setUserType('empresa')
-    //   nookies.set(null, 'portjobs.token', 'asdfrgh', { path: '/' })
-    //   nookies.set(null, 'portjobs.userType', 'empresa', { path: '/' })
-    //   router.push('/painel')
-    // } else if (email === 'profissional@portjobs.com' || password === '123456') {
-    //   setEmail(email)
-    //   setUserType('profissional')
-    //   nookies.set(null, 'portjobs.token', 'asdfrgh', { path: '/' })
-    //   nookies.set(null, 'portjobs.userType', 'profissional', { path: '/' })
-    //   router.push('/vagas')
-    // } else {
-    //   toast({
-    //     title: 'Oops! Erro ao iniciar sessão',
-    //     description: 'Email ou senha inválidos! Verifique e tente novamente',
-    //   })
-    // }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='flex flex-col items-center justify-center min-h-screen py-2'>
-          <Card className='w-full max-w-[380px] bg-white border-none'>
+        <div className='flex flex-col items-center justify-center min-h-screen py-2 bg-white md:bg-background'>
+          <Card className='w-full p-0 md:p6 md:max-w-[380px] bg-white shadow-none md:shadow-md border-none'>
             <CardHeader>
               <CardTitle className='text-3xl'>Iniciar sessão</CardTitle>
               <CardDescription>

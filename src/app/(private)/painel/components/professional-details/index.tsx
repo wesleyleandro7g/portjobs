@@ -36,11 +36,15 @@ export function ProfessionalDetails({
   }
 
   return (
-    <DialogContent className='max-w-3xl'>
+    <DialogContent className='max-w-3xl w-[90%] md:w-full rounded-md'>
       <DialogHeader>
-        <DialogTitle>{data.name}</DialogTitle>
-        <DialogDescription>{data.description}</DialogDescription>
-        <span className='text-text text-sm'>Telefone.: {data.phone}</span>
+        <DialogTitle className='text-left'>{data.name}</DialogTitle>
+        <DialogDescription className='text-left'>
+          {data.description}
+        </DialogDescription>
+        <span className='text-text text-sm text-left'>
+          Telefone.: {data.phone}
+        </span>
       </DialogHeader>
       <div className='space-y-4'>
         <div className='col-span-2 space-y-4'>

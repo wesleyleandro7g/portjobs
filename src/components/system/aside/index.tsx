@@ -73,7 +73,7 @@ export function Aside() {
   const filteredItems = asideItems.filter((item) => item.type === user?.type)
 
   return (
-    <aside className='w-64 border-r-2 border-gray-200 p-4 space-y-7 relative flex flex-col justify-between'>
+    <aside className='w-64 border-r-2 border-gray-200 p-4 space-y-7 relative hidden md:flex flex-col justify-between'>
       <div className='space-y-7'>
         <div className='flex items-center gap-2'>
           <h2 className='font-bold'>PortJOBS</h2>
